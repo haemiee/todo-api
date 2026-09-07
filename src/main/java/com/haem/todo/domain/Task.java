@@ -9,11 +9,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "task")
 @Getter @Setter
+@NoArgsConstructor
 public class Task {
 
 	@Id
@@ -24,12 +26,21 @@ public class Task {
 	
 	private String content; 
 	
-	private LocalDate dueData;
+	private LocalDate dueDate;
 	
 	private boolean completed;
 	
 	private LocalDateTime createdAt;
 
 	private LocalDateTime updatedAt;
+	
+	public Task(String title, String content, LocalDate dueDate) {
+		this.title = title;
+		this.content = content;
+		this.dueDate = dueDate;
+		this.completed = false;
+		this.createdAt = LocalDateTime.now();
+		this.updatedAt = LocalDateTime.now();
+	}
 	
 }
