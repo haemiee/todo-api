@@ -3,15 +3,18 @@ package com.haem.todo.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.haem.todo.domain.Task;
 import com.haem.todo.dto.TaskCreateRequest;
 import com.haem.todo.dto.TaskResponse;
+import com.haem.todo.dto.TaskUpdateRequest;
 import com.haem.todo.repository.TaskRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class TaskService {
 
@@ -37,5 +40,34 @@ public class TaskService {
 				.stream()
 				.map(TaskResponse::new)
 				.toList();
+	}
+	
+	// get
+	public TaskResponse getTask(Long id) {
+		Task task = taskRepository.findById(id)
+				.orElseThrow();
+		return new TaskResponse(task);
+	}
+	
+	// update
+	@Transactional
+	public void updateTask(Long id, TaskUpdateRequest request) {
+		
+		Task task = taskRepository.findById(id)
+				.orElseThrow();
+		
+		task.update(
+				request.getTitle(),
+				request.getContent(),
+				request.getDueDate()				
+				);
+	}
+	
+	@Transactional
+	public void deleteTask( Long id ) {
+		Task task = taskRepository.findById(id)
+				.orElseThrow();
+		
+		taskRepository.delete(task);
 	}
 }

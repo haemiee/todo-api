@@ -34,6 +34,8 @@ public class Task {
 
 	private LocalDateTime updatedAt;
 	
+	// Entity의 상태 변경을 Entity 내부에서 관리
+	
 	public Task(String title, String content, LocalDate dueDate) {
 		this.title = title;
 		this.content = content;
@@ -41,6 +43,13 @@ public class Task {
 		this.completed = false;
 		this.createdAt = LocalDateTime.now();
 		this.updatedAt = LocalDateTime.now();
+	}
+	
+	public void update(String title, String content, LocalDate dueDate) {
+		this.title = title;
+	    this.content = content;
+	    this.dueDate = dueDate;
+	    this.updatedAt = LocalDateTime.now();
 	}
 	
 }
