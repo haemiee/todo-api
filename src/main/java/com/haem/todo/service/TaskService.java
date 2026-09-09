@@ -9,6 +9,7 @@ import com.haem.todo.domain.Task;
 import com.haem.todo.dto.TaskCreateRequest;
 import com.haem.todo.dto.TaskResponse;
 import com.haem.todo.dto.TaskUpdateRequest;
+import com.haem.todo.exception.TaskNotFoundException;
 import com.haem.todo.repository.TaskRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -42,10 +43,10 @@ public class TaskService {
 				.toList();
 	}
 	
-	// get
+	// 상세 조회
 	public TaskResponse getTask(Long id) {
 		Task task = taskRepository.findById(id)
-				.orElseThrow();
+				.orElseThrow(() -> new TaskNotFoundException(id));
 		return new TaskResponse(task);
 	}
 	
@@ -54,7 +55,7 @@ public class TaskService {
 	public void updateTask(Long id, TaskUpdateRequest request) {
 		
 		Task task = taskRepository.findById(id)
-				.orElseThrow();
+				.orElseThrow(() -> new TaskNotFoundException(id));
 		
 		task.update(
 				request.getTitle(),
@@ -66,7 +67,7 @@ public class TaskService {
 	@Transactional
 	public void deleteTask( Long id ) {
 		Task task = taskRepository.findById(id)
-				.orElseThrow();
+				.orElseThrow(() -> new TaskNotFoundException(id));
 		
 		taskRepository.delete(task);
 	}

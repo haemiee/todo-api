@@ -17,6 +17,7 @@ import com.haem.todo.dto.TaskResponse;
 import com.haem.todo.dto.TaskUpdateRequest;
 import com.haem.todo.service.TaskService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -27,7 +28,7 @@ public class TaskController {
 	private final TaskService taskService;
 	
 	@PostMapping
-	public ResponseEntity<Long> createTask( @RequestBody TaskCreateRequest request ) {
+	public ResponseEntity<Long> createTask( @Valid @RequestBody TaskCreateRequest request ) {
 		
 		Long taskId = taskService.createTask(request);
 		return ResponseEntity.ok(taskId);
