@@ -2,6 +2,8 @@ package com.haem.todo.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,55 +22,56 @@ import lombok.RequiredArgsConstructor;
 public class TaskService {
 
 	private final TaskRepository taskRepository;
-	
+
 	// create
 	public Long createTask(TaskCreateRequest request) {
-		
-		Task task = new Task(
-				request.getTitle(),
-				request.getContent(),
-				request.getDueDate()
-		);
-		
+
+		Task task = new Task(request.getTitle(), request.getContent(), request.getDueDate());
+
 		Task savedTask = taskRepository.save(task);
-		
+
 		return savedTask.getId();
 	}
-	
+
 	// get list
-	public List<TaskResponse> getTasks() {
-		return taskRepository.findAll()
-				.stream()
-				.map(TaskResponse::new)
-				.toList();
+	public Page<TaskResponse> getTasks(Pageable pageable) {
+		return taskRepository.findAll(pageable)
+				.map(TaskResponse::new);
 	}
-	
+
 	// 상세 조회
 	public TaskResponse getTask(Long id) {
-		Task task = taskRepository.findById(id)
-				.orElseThrow(() -> new TaskNotFoundException(id));
+		Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
 		return new TaskResponse(task);
 	}
-	
+
 	// update
 	@Transactional
 	public void updateTask(Long id, TaskUpdateRequest request) {
-		
-		Task task = taskRepository.findById(id)
-				.orElseThrow(() -> new TaskNotFoundException(id));
-		
-		task.update(
-				request.getTitle(),
-				request.getContent(),
-				request.getDueDate()				
-				);
+
+		Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+
+		task.update(request.getTitle(), request.getContent(), request.getDueDate());
 	}
-	
+
 	@Transactional
-	public void deleteTask( Long id ) {
-		Task task = taskRepository.findById(id)
-				.orElseThrow(() -> new TaskNotFoundException(id));
-		
+	public void deleteTask(Long id) {
+		Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+
 		taskRepository.delete(task);
+	}
+
+	@Transactional
+	public void toggleCompleted(Long id) {
+
+		Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+
+		task.toggleCompelted();
+
+	}
+
+	public Page<TaskResponse> searchTasks(String keyword, Pageable pageable) {
+		return taskRepository.findByTitleContaining(keyword, pageable)
+				.map(TaskResponse::new);	// Page 안의 Task를 TaskResponse로 변환
 	}
 }

@@ -52,4 +52,9 @@ public class Task {
 	    this.updatedAt = LocalDateTime.now();
 	}
 	
+	public void toggleCompelted() {
+		this.completed = !this.completed;
+		this.updatedAt = LocalDateTime.now();
+	}
+	
 }
