@@ -1,4 +1,4 @@
-package com.haem.todo_api;
+package com.haem.todo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

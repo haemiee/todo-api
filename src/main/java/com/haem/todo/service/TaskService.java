@@ -66,7 +66,7 @@ public class TaskService {
 
 		Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
 
-		task.toggleCompelted();
+		task.toggleCompleted();
 
 	}
 
